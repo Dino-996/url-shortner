@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface ShortUrl {
-  _id: string;
   originalUrl: string;
   shortId: string;
   createdAt: string;
+  visitCount: number;
 }
 
 @Injectable({
@@ -33,6 +33,10 @@ export class ShortnerApiRest {
 
   public getStatsById(shortId: string): Observable<{ originaUrl: string, visitCount: number }> {
     return this.http.get<{ originaUrl: string, visitCount: number }>(`${this.baseUrl}/api/stats/${shortId}`);
+  }
+
+  public getAllUrl(): Observable<ShortUrl[]> {
+    return this.http.get<ShortUrl[]>(`${this.baseUrl}/api/stats/urls`);
   }
 
 }
