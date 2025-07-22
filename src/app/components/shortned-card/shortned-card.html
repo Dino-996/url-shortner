@@ -1,47 +1,73 @@
-<section class="container my-3 p-3 border rounded-5 shadow bg-body">
-
+<section class="container my-3 p-3 border rounded-4 shadow bg-body">
     <!-- Area link -->
     <div class="card border-0">
-
         <div class="card-body">
-
-            <div class="row">
+            <div class="mx-2 row">
                 <div class="col">
                     <h4 class="card-title">Tutti i link</h4>
                 </div>
                 <!-- Search link -->
                 <div class="col input-group">
-                    <span class="input-group-text" id="basic-addon1"><ng-icon name="bootstrapSearch" size="16" /></span>
-                    <input class="form-control" type="text" placeholder="Cerca link" aria-label="Cerca link"
-                        aria-describedby="Area di ricerca per i link accorciati" required>
-                    <button class="btn btn-primary input-group-text" id="basic-addon2">Cerca</button>
+                    <span class="input-group-text">
+                        <ng-icon name="bootstrapSearch" size="16" />
+                    </span>
+                    <input (keydown.enter)="search()" [value]="searchTerm()" (input)="onInput($event)"
+                        class="form-control" type="text" placeholder="Cerca link" aria-label="Cerca link"
+                        aria-describedby="Area di ricerca per i link accorciati" />
+                    @if (hasSearch()) {
+                    <button (click)="clearSearch()" class="btn btn-danger" type="button">
+                        <ng-icon name="bootstrapXLg" size="16" />
+                        <span class="visually-hidden">Cancella ricerca</span>
+                    </button>
+                    } @else {
+                    <button (click)="search()" class="btn btn-primary" type="button">
+                        Cerca
+                    </button>
+                    }
                 </div>
             </div>
 
             <!-- Link -->
             <div class="container">
-                <div class="col justify-content-center">
-                    <div class="row-auto border p-3 m-2 mt-4 rounded-5 bg-light shadow">
-                        
-                        <div class="d-flex gap-2 justify-start align-items-center">
-                            <span class="text-info">qui ci va il link short</span>
-                            <span class="text-secondary">qui ci va la data con pipe date di angular</span>
+                <div class="col">
+                    @defer (when allUrls().length > 0) {
+                    @for (url of shortedUrls(); track url.shortId) {
+                    <div class="row-auto border p-3 m-2 mt-4 rounded-4 bg-light shadow">
+                        <div class="d-flex gap-2 justify-content-between align-items-center">
+                            <div>
+                                <span class="text-info">https://as.up.railway.app/api/{{ url.shortId }}</span>
+                                <span class="text-secondary">{{ url.createdAt | date }}</span>
+                            </div>
+                            <div>
+                                <button (click)="copyShortned(url.shortId)" triggers="hover" placement="top" [ngbPopover]="isCopied(url.shortId) ? 'Link copiato!' : 'Copia link'" container="body" type="button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" class="mx-1 btn btn-secondary rounded-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top"><ng-icon name="bootstrapCopy" size="16" /></button>
+                                <button (click)="onShortenedLink(url.shortId)" triggers="hover" placement="top" ngbPopover="Visita" container="body" type="button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" class="mx-1 btn btn-secondary rounded-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top"><ng-icon name="bootstrapBoxArrowUpRight" size="16" /></button>
+                                <button class="mx-1 btn btn-danger rounded-3"><ng-icon name="bootstrapTrash" size="16" /></button>
+                            </div>
                         </div>
-                        
-                        <span class="font-thin">qui ci va il link lungo</span>
-                        
-                        <div class="d-flex gap-2 justify-start align-items-center text-secondary">
-                            <ng-icon name="bootstrapGraphUp" size="16" /> 
-                            <span>qui ci va il numero di click totale</span>
+                        <a [href]="url.originalUrl" target="_blank" class="font-thin">{{ url.originalUrl }}</a>
+                        <div class="d-flex gap-2 justify-start align-items-center mt-2 text-secondary">
+                            <ng-icon name="bootstrapGraphUp" size="16" />
+                            <span>{{ url.visitCount }}</span>
                         </div>
                     </div>
-                    <div class="row-auto border p-3 m-2 rounded-5 bg-light shadow">ciao</div>
-                    <div class="row-auto border p-3 m-2 rounded-5 bg-light shadow">ciao</div>
+                    } @empty {
+                    <div class="alert alert-warning rounded-4 mt-3" role="alert">
+                        <div class="d-flex gap-2 justify-start align-items-center">
+                            <ng-icon name="bootstrapExclamationTriangle" size="18" />
+                            <span>Nessun link trovato</span>
+                        </div>
+                    </div>
+                    }
+                    } @placeholder {
+                    <div class="text-center mt-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Caricamento...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Caricamento link in corso...</p>
+                    </div>
+                    }
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </section>

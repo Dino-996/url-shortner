@@ -36,7 +36,7 @@ export class ShortnerApiRest {
   }
 
   public getAllUrl(): Observable<ShortUrl[]> {
-    return this.http.get<ShortUrl[]>(`${this.baseUrl}/api/stats/urls`);
+    return this.http.get<ShortUrl[]>(`${this.baseUrl}/api/urls`);
   }
 
 }

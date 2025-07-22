@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ShortnerApiRest } from './services/shortner-api-rest';
 import { ContentCard } from './components/content-card/content-card';
 import { ShortnedCard } from './components/shortned-card/shortned-card';
@@ -18,31 +18,27 @@ export class App implements OnInit {
 
   private shortnerServiceApiRest = inject(ShortnerApiRest);
 
-  public readonly urlsCount = signal<number>(0);
-  public readonly clickCount = signal<number>(0); // bisogna creare un api ad-hoc per il click count
+  public readonly urlsCounter = signal<number>(0);
+  public readonly clickCounter = signal<number>(0);
 
   public ngOnInit(): void {
-    this.getUrlsCount();
+    this.initCounter();
   }
 
-  
-
-  public getClickCounter(): void {
-    this.shortnerServiceApiRest.getAllUrl().subscribe((urls: ShortUrl[]) => {
-      let counter = 0;
-      urls.forEach(url => {
-        counter += url.visitCount;
-      });
-      console.debug('Counter:', counter, this.clickCount());
-      this.clickCount.set(counter);
+  public initCounter(): void {
+    this.shortnerServiceApiRest.getAllUrl().subscribe({
+      next: (urls: ShortUrl[]) => {
+        this.urlsCounter.set(urls.length);
+        const counter = urls.reduce((increment, url) => increment + url.visitCount, 0);
+        this.clickCounter.set(counter);
+      },
+      error: (error) => {
+        console.error("Errore nel recupero degli URL:", error);
+        // fallback
+        this.urlsCounter.set(0);
+        this.clickCounter.set(0);
+      }
     });
-  }
 
-  public getUrlsCount(): void {
-    this.shortnerServiceApiRest.getAllUrl().subscribe((urls: ShortUrl[]) => {
-      console.debug('urls:', urls.length);
-      this.urlsCount.set(urls.length);
-    });
   }
-
 }
