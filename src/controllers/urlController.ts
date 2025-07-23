@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { generateShortId } from "../util/generateShortId";
 import { isValidUrl } from "../util/validateUrl";
-import { createShortUrl, getAllShortUrl, getLength, getOriginalUrl, getStatus } from "../services/urlService";
+import { createShortUrl, deleteShortUrl, getAllShortUrl, getLength, getOriginalUrl, getStatus } from "../services/urlService";
 
-export const shorten = async (req: Request, res: Response, next: NextFunction) => {
+export const shortner = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { originalUrl } = req.body;
         if (!isValidUrl(originalUrl)) {
@@ -59,3 +59,17 @@ export const allUrl = async (req: Request, res: Response, next: NextFunction) =>
         next(error);
     }
 };
+
+export const shortId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { shortId } = req.params;
+        const result = await deleteShortUrl(shortId);
+        if(result.deletedCount === 0) {
+            return res.status(400).json({ error: "Nessu URL trovato per questo shortID" });
+        }
+        res.status(200).json({ messaggio: "Documento eliminato con successo" });
+    }
+    catch (error) {
+        next(error);
+    }
+}

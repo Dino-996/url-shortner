@@ -19,3 +19,7 @@ export const getLength = async () => {
 export const getAllShortUrl = async () => {
     return UrlModel.find().select('-_id shortId originalUrl visitCount createdAt').sort({ createdAt: -1 });
 }
+
+export const deleteShortUrl = async (shortId: string) => {
+    return UrlModel.deleteOne({ shortId });
+}
