@@ -7,5 +7,5 @@ urlRouter.post("/shorten", urlController.shortner);
 urlRouter.get("/urls", urlController.allUrl);
 urlRouter.get("/length", urlController.length);
 urlRouter.get("/:shortId", urlController.redirect);
-urlRouter.get("/delete/:shortId", urlController.shortId);
 urlRouter.get("/status/:shortId", urlController.stats);
+urlRouter.delete(":shortId", urlController.deleteShortId);

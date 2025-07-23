@@ -60,7 +60,7 @@ export const allUrl = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const shortId = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteShortId = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { shortId } = req.params;
         const result = await deleteShortUrl(shortId);
