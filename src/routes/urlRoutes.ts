@@ -8,4 +8,4 @@ urlRouter.get("/urls", urlController.allUrl);
 urlRouter.get("/length", urlController.length);
 urlRouter.get("/:shortId", urlController.redirect);
 urlRouter.get("/status/:shortId", urlController.stats);
-urlRouter.delete(":shortId", urlController.deleteShortId);
+urlRouter.delete("/delete/:shortId", urlController.deleteShortId);
